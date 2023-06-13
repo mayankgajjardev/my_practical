@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_practical/modules/authentication/controller/controller_auth.dart';
 import 'package:flutter_practical/modules/users/controller/controller_user.dart';
+import 'package:flutter_practical/utils/constants/app_constants.dart';
 import 'package:flutter_practical/utils/helper/app_helper.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -65,7 +66,7 @@ class _ScreenAddUserState extends State<ScreenAddUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add User"),
+        title: Text((widget.uid ?? '').isEmpty ? "Add User" : "Edit User"),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -86,6 +87,7 @@ class _ScreenAddUserState extends State<ScreenAddUser> {
                       borderRadius: BorderRadius.circular(50),
                       child: CircleAvatar(
                         radius: 50,
+                        backgroundColor: Colors.transparent,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Obx(
@@ -97,7 +99,9 @@ class _ScreenAddUserState extends State<ScreenAddUser> {
                                     fit: BoxFit.cover,
                                   )
                                 : Image.network(
-                                    widget.image?.path ?? '',
+                                    (widget.image?.path ?? '').isEmpty
+                                        ? AppConstans.imgPerson
+                                        : widget.image?.path ?? '',
                                     height: 200.0,
                                     width: 200.0,
                                     fit: BoxFit.cover,
