@@ -4,32 +4,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_practical/modules/pdf/views/screen_pdf_view.dart';
 import 'package:flutter_practical/utils/constants/app_constants.dart';
 import 'package:get/get.dart';
 
 class ControllerPdf extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
   var isLoading = false.obs;
   var isUploading = false.obs;
   var allPdfs = [].obs;
 
   // Upload Pdf
-  Future<String> uploadPdf(String filePath) async {
-    String fileName = filePath.split('/').last;
-    final ref = FirebaseStorage.instance.ref().child('pdfs').child(fileName);
-    await ref.putFile(File(filePath), SettableMetadata(contentType: 'pdf'));
-    String downloadLink = await ref.getDownloadURL();
+  Future<String> uploadPdf(String fileName, File file) async {
+    final ref = FirebaseStorage.instance.ref().child("pdfs/$fileName");
+    final uploadTask = ref.putFile(file, SettableMetadata(contentType: 'pdf'));
+    await uploadTask.whenComplete(() {});
+    final downloadLink = await ref.getDownloadURL();
     return downloadLink;
   }
 
   Future<void> openPDF(String filePath) async {
-    debugPrint("Mayank :: FIle Path :: $filePath");
-    Reference ref = _storage.ref('pdfs/$filePath');
-    String url = await ref.getDownloadURL();
-    debugPrint("Mayank :: Final Url :: $url");
-    Get.to(() => ScreenPdfView(pdfUrl: url));
+    try {
+      final docFile = await DefaultCacheManager().getSingleFile(filePath);
+      Get.to(() => ScreenPdfView(pdfFile: docFile));
+    } catch (error) {
+      debugPrint("Mayank :: openPDF :: Error :: $error");
+    }
   }
 
   // Pick File
@@ -40,11 +41,12 @@ class ControllerPdf extends GetxController {
           .pickFiles(type: FileType.custom, allowedExtensions: ['pdf', 'doc']);
 
       if (pickedFile != null) {
-        String filePath = pickedFile.files.single.path!;
-        final downloadLink = await uploadPdf(filePath);
+        final fileName = pickedFile.files.single.name;
+        File file = File(pickedFile.files.single.path!);
+        final downloadLink = await uploadPdf(fileName, file);
 
         await _firestore.collection(AppConstans.pdfsCollection).add({
-          "name": pickedFile.files.single.name,
+          "name": fileName,
           "url": downloadLink,
         });
         await fetchedPdf();

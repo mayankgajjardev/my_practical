@@ -63,7 +63,6 @@ class _ScreenAddUserState extends State<ScreenAddUser> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Mayank :: Path :: ${userCtrl.selectedImage.value.path}");
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add User"),

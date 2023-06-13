@@ -67,8 +67,6 @@ class _ScreenUsersState extends State<ScreenUsers> {
                           child: ListView.separated(
                             itemCount: userCtrl.users.length,
                             itemBuilder: (context, int i) {
-                              debugPrint(
-                                  "Mayank :: User :: ${userCtrl.users[i]}");
                               return ListTile(
                                 leading: CircleAvatar(
                                   backgroundImage: NetworkImage(

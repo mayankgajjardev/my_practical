@@ -15,12 +15,6 @@ class ControllerAuth extends GetxController {
   User? get currentUser => _currentUser.value;
 
   @override
-  void onClose() {
-    super.onClose();
-    debugPrint("Badhuy Puru.............");
-  }
-
-  @override
   void onInit() {
     _currentUser.bindStream(_auth.authStateChanges());
     super.onInit();
@@ -38,7 +32,6 @@ class ControllerAuth extends GetxController {
       Get.back();
     } catch (e) {
       AppHelper.errorDialog(context, e.toString());
-      debugPrint("Mayank :: Login Error :: ${e.toString()}");
       isSignUpLoading(false);
     }
   }
@@ -53,7 +46,6 @@ class ControllerAuth extends GetxController {
       Get.offAll(() => const ScreenUsers());
     } catch (e) {
       AppHelper.errorDialog(context, e.toString());
-      debugPrint("Mayank :: Register Error :: ${e.toString()}");
       isSignInLoading(false);
     }
   }

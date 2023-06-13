@@ -23,7 +23,7 @@ class _ScreenPdfState extends State<ScreenPdf> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Pdfs"),
+        title: const Text("View PDF"),
         centerTitle: true,
       ),
       body: Column(
@@ -65,10 +65,14 @@ class _ScreenPdfState extends State<ScreenPdf> {
                                         height: 120,
                                         width: 100,
                                       ),
-                                      Text(
-                                        pdf['name'],
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(fontSize: 16),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Text(
+                                          pdf['name'],
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -79,11 +83,18 @@ class _ScreenPdfState extends State<ScreenPdf> {
                         ),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              pdfCtrl.pickFile();
-            },
-            child: const Text("Add Pdf"),
+          Obx(
+            () => pdfCtrl.isUploading.value
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: AppHelper.loader(),
+                  )
+                : TextButton(
+                    onPressed: () {
+                      pdfCtrl.pickFile();
+                    },
+                    child: const Text("Add Pdf"),
+                  ),
           )
         ],
       ),

@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class ScreenPdfView extends StatefulWidget {
-  final String pdfUrl;
-  const ScreenPdfView({super.key, required this.pdfUrl});
+  final File pdfFile;
+  const ScreenPdfView({super.key, required this.pdfFile});
 
   @override
   State<ScreenPdfView> createState() => _ScreenPdfViewState();
@@ -14,7 +16,7 @@ class _ScreenPdfViewState extends State<ScreenPdfView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PDFView(
-        filePath: widget.pdfUrl,
+        filePath: widget.pdfFile.path,
         onError: (error) {
           debugPrint("Mayank :: onError :: $error");
         },

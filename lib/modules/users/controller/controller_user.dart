@@ -17,7 +17,6 @@ class ControllerUser extends GetxController {
   final authCtrl = Get.find<ControllerAuth>();
   var isLoading = false.obs;
   var isFetchLoading = false.obs;
-
   var selectedImage = XFile('').obs;
   var users = [].obs;
 
@@ -70,6 +69,7 @@ class ControllerUser extends GetxController {
     }
   }
 
+  // Update User
   Future<void> updateUser(String uid, String name, String mobileNumber,
       String dob, String age, XFile imageFile) async {
     isLoading(true);
@@ -83,25 +83,14 @@ class ControllerUser extends GetxController {
             await collection.where("user_id", isEqualTo: uid).get();
 
         for (final DocumentSnapshot doc in snapshot.docs) {
-          debugPrint(
-              "Mayank :: Photod :: ${doc['image_path']} &&&&&&&& ${imageFile.path.toString()}");
-          if (doc['image_path'].toString() != imageFile.path.toString()) {
-            String? imageUrl = await uploadImageToStorage(uid, imageFile);
-            await doc.reference.update({
-              "name": name,
-              "mobile_number": mobileNumber,
-              "dob": dob,
-              "age": age,
-              "image_path": imageUrl ?? "https://picsum.photos/200",
-            });
-          } else {
-            await doc.reference.update({
-              "name": name,
-              "mobile_number": mobileNumber,
-              "dob": dob,
-              "age": age,
-            });
-          }
+          String? imageUrl = await uploadImageToStorage(uid, imageFile);
+          await doc.reference.update({
+            "name": name,
+            "mobile_number": mobileNumber,
+            "dob": dob,
+            "age": age,
+            "image_path": imageUrl ?? "https://picsum.photos/200",
+          });
         }
         isLoading(false);
         Get.offAll(() => const ScreenUsers());
@@ -124,7 +113,6 @@ class ControllerUser extends GetxController {
       users.value = fetchedUser;
       isFetchLoading(false);
     } catch (e) {
-      debugPrint("Mayank :: Error :: ${e.toString()}");
       users.value = [];
       isFetchLoading(false);
     }

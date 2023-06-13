@@ -24,10 +24,9 @@ class _ScreenProfileState extends State<ScreenProfile> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Mayank :: ${widget.uid}");
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profie"),
+        title: const Text("Profile"),
         centerTitle: true,
       ),
       body: Center(
@@ -46,15 +45,10 @@ class _ScreenProfileState extends State<ScreenProfile> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          profileCtrl.pickImageFromGallery();
-                        },
-                        child: CircleAvatar(
-                          radius: 80,
-                          backgroundImage:
-                              NetworkImage(profileData['image_path']),
-                        ),
+                      CircleAvatar(
+                        radius: 80,
+                        backgroundImage:
+                            NetworkImage(profileData['image_path']),
                       ),
                       const SizedBox(height: 16),
                       Text(
